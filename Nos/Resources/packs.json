@@ -1,0 +1,40 @@
+{
+  "packs": [
+    {
+      "id": "old-school-media",
+      "title": "Old-school media",
+      "description": "Legacy newsrooms and wire services — follow the ones that bridge to Nostr via Mostr / Bridgy Fed.",
+      "naddr": null,
+      "members": [
+        { "name": "BBC News", "identifier": "@BBCNews@mastodon.social" },
+        { "name": "The Guardian", "identifier": "@TheGuardian@mastodon.social" },
+        { "name": "NPR", "identifier": "@NPR@mastodon.social" },
+        { "name": "Associated Press", "identifier": "@AP@mastodon.social" },
+        { "name": "Reuters", "identifier": "@reuters@mas.to" },
+        { "name": "Financial Times", "identifier": "@FinancialTimes@mastodon.social" },
+        { "name": "The New York Times", "identifier": "https://bsky.app/profile/nytimes.com" },
+        { "name": "Washington Post", "identifier": "https://bsky.app/profile/washingtonpost.com" },
+        { "name": "ProPublica", "identifier": "@ProPublica@newsie.social" },
+        { "name": "Democracy Now", "identifier": "@democracynow@newsie.social" }
+      ]
+    },
+    {
+      "id": "stringer-journalists",
+      "title": "Stringer journalists",
+      "description": "Independent and staff journalists who report from the ground — follow all that resolve through Mostr.",
+      "naddr": null,
+      "members": [
+        { "name": "Taylor Lorenz", "identifier": "@taylorlorenz@mastodon.social" },
+        { "name": "Craig Silverman", "identifier": "@CraigSilverman@mastodon.social" },
+        { "name": "Julia Angwin", "identifier": "@juliaangwin@mastodon.social" },
+        { "name": "Ken Klippenstein", "identifier": "https://bsky.app/profile/kenklippenstein.bsky.social" },
+        { "name": "Parker Molloy", "identifier": "@ParkerMolloy@mastodon.social" },
+        { "name": "Micah Lee", "identifier": "@micahflee@mastodon.social" },
+        { "name": "Quinn Norton", "identifier": "@quinn@mastodon.social" },
+        { "name": "Cory Doctorow", "identifier": "@pluralistic@mamot.fr" },
+        { "name": "Marisa Kabas", "identifier": "https://bsky.app/profile/marisakabas.bsky.social" },
+        { "name": "Judd Legum", "identifier": "https://bsky.app/profile/juddlegum.bsky.social" }
+      ]
+    }
+  ]
+}

@@ -20,12 +20,15 @@ final class AuthorList: Event {
         keyPair: KeyPair? = nil,
         in context: NSManagedObjectContext
     ) throws -> AuthorList {
-        guard jsonEvent.kind == EventKind.followSet.rawValue else { throw AuthorListError.invalidKind }
+        guard jsonEvent.kind == EventKind.followSet.rawValue
+            || jsonEvent.kind == EventKind.starterPack.rawValue else {
+            throw AuthorListError.invalidKind
+        }
         guard let replaceableID = jsonEvent.replaceableID else { throw AuthorListError.missingReplaceableID }
         let owner = try Author.findOrCreate(by: jsonEvent.pubKey, context: context)
 
         // Fetch existing AuthorList if it exists
-        let fetchRequest = AuthorList.authorList(by: replaceableID, owner: owner, kind: EventKind.followSet.rawValue)
+        let fetchRequest = AuthorList.authorList(by: replaceableID, owner: owner, kind: jsonEvent.kind)
         let existingAuthorList = try context.fetch(fetchRequest).first
         existingAuthorList?.authors = Set()
 
@@ -106,5 +109,23 @@ final class AuthorList: Event {
             owner
         )
         return request
+    }
+
+    /// Fetch request for NIP-51 starter packs (kind 39089) with a title.
+    static func starterPacks() -> NSFetchRequest<AuthorList> {
+        let request = NSFetchRequest<AuthorList>(entityName: "AuthorList")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
+        request.predicate = NSPredicate(
+            format: "kind = %i AND title != nil AND title != '' AND deletedOn.@count = 0",
+            EventKind.starterPack.rawValue
+        )
+        return request
+    }
+
+    static func starterPack(
+        replaceableID: RawReplaceableID,
+        owner: Author
+    ) -> NSFetchRequest<AuthorList> {
+        authorList(by: replaceableID, owner: owner, kind: EventKind.starterPack.rawValue)
     }
 }

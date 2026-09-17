@@ -298,9 +298,31 @@ enum SearchOrigin {
                 analytics.displayedNoteFromDiscoverSearch()
                 router.push(note)
             }
+        } else if let naddrPack = starterPack(from: trimmedQuery) {
+            Task { @MainActor in
+                router.push(.followPack(naddrPack))
+            }
         } else {
             search(for: lowercasedQuery)
         }
+    }
+
+    /// If the query is an naddr for a curated catalog pack, return that pack.
+    private func starterPack(from query: String) -> FollowPack? {
+        let stripped = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard stripped.contains("naddr1") else { return nil }
+        do {
+            let identifier = try NostrIdentifier.decode(bech32String: stripped.replacingOccurrences(of: "nostr:", with: ""))
+            if case let .naddr(replaceableID, _, _, kind) = identifier,
+                Int64(kind) == EventKind.starterPack.rawValue {
+                return FollowPackCatalog.loadBundled().first(where: {
+                    $0.naddr?.contains(replaceableID) == true || $0.naddr == stripped
+                })
+            }
+        } catch {
+            return nil
+        }
+        return nil
     }
 
     @MainActor

@@ -12,7 +12,7 @@ enum EventProcessor {
         skipVerification: Bool = false,
         keyPair: KeyPair? = nil
     ) throws -> Event? {
-        if jsonEvent.kind == EventKind.followSet.rawValue {
+        if jsonEvent.kind == EventKind.followSet.rawValue || jsonEvent.kind == EventKind.starterPack.rawValue {
             return try saveFollowSet(
                 jsonEvent: jsonEvent,
                 relay: relay,
@@ -70,7 +70,7 @@ enum EventProcessor {
 
 extension EventProcessor {
     
-    /// Creates or updates a kind 30000 Follow Set event into an ``AuthorList``.
+    /// Creates or updates a kind 30000 Follow Set or kind 39089 Starter Pack into an ``AuthorList``.
     /// - Parameters:
     ///   - jsonEvent: The event to parse.
     ///   - relay: The relay the event came from, if needed.

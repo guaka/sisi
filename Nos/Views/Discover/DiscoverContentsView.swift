@@ -17,6 +17,7 @@ struct DiscoverContentsView: View {
     @State private var featuredAuthorIDs = [RawAuthorID]()
     @State private var subscriptions = [ObjectIdentifier: SubscriptionCancellable]()
     @State private var selectedCategory: FeaturedAuthorCategory = .all
+    @State private var followPacks = FollowPackCatalog.loadBundled()
     
     @State private var featuredAuthorsPerformingInitialLoad = true
     private let featuredAuthorsInitialLoadTime = 1
@@ -80,6 +81,10 @@ struct DiscoverContentsView: View {
         ZStack {
             ScrollView {
                 LazyVStack {
+                    if !followPacks.isEmpty {
+                        followPacksSection
+                    }
+
                     categoryPicker
                     
                     ForEach(featuredAuthorIDs) { authorID in
@@ -122,6 +127,25 @@ struct DiscoverContentsView: View {
                 }
             }
         }
+    }
+
+    private var followPacksSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Follow packs")
+                .font(.clarity(.bold, textStyle: .headline))
+                .foregroundStyle(Color.primaryTxt)
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+
+            ForEach(followPacks) { pack in
+                FollowPackCard(pack: pack) {
+                    router.push(.followPack(pack))
+                }
+                .padding(.horizontal, 13)
+                .readabilityPadding()
+            }
+        }
+        .padding(.bottom, 8)
     }
 
     private var categoryPicker: some View {
