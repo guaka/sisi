@@ -8,9 +8,17 @@ Check our website [nos.social](https://nos.social/) for more info! You can also 
 
 ## FORK
 
-- fix some crashes
-- harden
-- add possibility to enter mastodon/bluesky urls to follow
+Personal Nos fork ([guaka/sisi](https://github.com/guaka/sisi)).
+
+- Crash fixes and hardening (private-key copy auth, secure pasteboard, Safari for untrusted links)
+- Notification word blocklist (e.g. filter airdrop spam)
+- Follow Mastodon / Bluesky accounts by pasting profile URLs or handles (via [Mostr](https://mostr.pub/) + Bridgy Fed)
+- Follow packs — one-tap follow for journalists / old-school media ([catalog site](https://guaka.github.io/sisi/))
+- Daily usage nudge (~25 min) and lock (~30 min, with short snoozes)
+
+**Site:** [https://guaka.github.io/sisi/](https://guaka.github.io/sisi/) (GitHub Pages from `main` `/docs`)
+
+**Open stack:** [#3 URL follow](https://github.com/guaka/sisi/pull/3) → [#4 packs](https://github.com/guaka/sisi/pull/4) → [#5 usage limit](https://github.com/guaka/sisi/pull/5)
 
 
 ## Contributing 
