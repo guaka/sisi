@@ -9,6 +9,7 @@ struct DiscoverTab: View {
     
     @EnvironmentObject private var router: Router
     @Environment(CurrentUser.self) var currentUser
+    @Environment(RelayService.self) private var relayService
     @Dependency(\.analytics) private var analytics
 
     @State private var showInfoPopover = false
@@ -34,6 +35,9 @@ struct DiscoverTab: View {
                 .background(Color.cardBgBottom)
                 .onSubmit {
                     searchController.submitSearch(query: searchController.query)
+                }
+                .task {
+                    _ = await relayService.requestStarterPacks()
                 }
                 ZStack {
                     DiscoverContentsView(

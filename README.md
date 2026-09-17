@@ -11,6 +11,10 @@ Check our website [nos.social](https://nos.social/) for more info! You can also 
 - fix some crashes
 - harden
 - add possibility to enter mastodon/bluesky urls to follow
+- follow packs (journalists, old-school media) — see [Follow packs](https://guaka.github.io/sisi/)
+- daily usage nudge (~25 min) and stop (~30 min)
+
+Site: [https://guaka.github.io/sisi/](https://guaka.github.io/sisi/) (enable GitHub Pages from `main` / `/docs` if needed)
 
 
 ## Contributing 

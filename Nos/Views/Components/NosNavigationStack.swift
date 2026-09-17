@@ -7,7 +7,7 @@ struct NosNavigationStack<Content: View>: View {
     @Binding var path: NavigationPath
     
     let content: () -> Content
-    
+    10|    
     var body: some View {
         NavigationStack(path: $path) {
             content()
@@ -33,6 +33,8 @@ struct NosNavigationStack<Content: View>: View {
                         }
                     case .list(let list):
                         AuthorListDetailView(list: list)
+                    case .followPack(let pack):
+                        FollowPackDetailView(pack: pack)
                     case .replyTo(let eventID):
                         EventObservationView(eventID: eventID) { event in
                             NoteView(note: event, showKeyboard: true)

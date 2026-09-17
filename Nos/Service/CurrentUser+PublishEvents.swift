@@ -188,28 +188,38 @@ extension CurrentUser {
     
     /// Follow by public hex key
     @MainActor func follow(author toFollow: Author) async throws {
-        guard let followKey = toFollow.hexadecimalPublicKey else {
-            Log.debug("Error: followKey is nil")
-            return
-        }
+        try await follow(authors: [toFollow])
+    }
 
-        Log.debug("Following \(followKey)")
+    /// Follow multiple authors with a single contact-list publish.
+    @MainActor func follow(authors toFollow: [Author]) async throws {
+        guard !toFollow.isEmpty else { return }
 
         var followKeys = await Array(socialGraph.followedKeys)
-        followKeys.append(followKey)
-        
-        // Update author to add the new follow
-        if let followedAuthor = try? Author.find(by: followKey, context: viewContext), let currentUser = author {
-            let follow = try Follow.findOrCreate(
-                source: currentUser,
-                destination: followedAuthor,
-                context: viewContext
-            )
+        let existing = Set(followKeys)
+        let currentUserAuthor = author
 
-            // Add to the current user's follows
-            currentUser.follows.insert(follow)
+        for person in toFollow {
+            guard let followKey = person.hexadecimalPublicKey else {
+                Log.debug("Error: followKey is nil")
+                continue
+            }
+            guard !existing.contains(followKey) else { continue }
+
+            Log.debug("Following \(followKey)")
+            followKeys.append(followKey)
+
+            if let followedAuthor = try? Author.find(by: followKey, context: viewContext),
+                let currentUserAuthor {
+                let follow = try Follow.findOrCreate(
+                    source: currentUserAuthor,
+                    destination: followedAuthor,
+                    context: viewContext
+                )
+                currentUserAuthor.follows.insert(follow)
+            }
         }
-        
+
         try viewContext.save()
         await publishContactList(tags: followKeys.pTags)
     }
