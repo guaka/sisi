@@ -35,6 +35,334 @@
         { "name": "Marisa Kabas", "identifier": "https://bsky.app/profile/marisakabas.bsky.social" },
         { "name": "Judd Legum", "identifier": "https://bsky.app/profile/juddlegum.bsky.social" }
       ]
+    },
+    {
+      "id": "sci-fi-writers",
+      "title": "Sci-fi writers",
+      "description": "Speculative fiction authors active on the open web. Bluesky members need Bridgy Fed opt-in to resolve on Nostr.",
+      "naddr": null,
+      "members": [
+        { "name": "Cory Doctorow", "identifier": "@pluralistic@mamot.fr" },
+        { "name": "Charles Stross", "identifier": "npub1yacj26q9parem5fqf2s3ym9xkxghkk0w2jc63aglsnl2fmyhshnszgla7e" },
+        { "name": "John Scalzi", "identifier": "https://bsky.app/profile/scalzi.com" },
+        { "name": "N. K. Jemisin", "identifier": "https://bsky.app/profile/nkjemisin.bsky.social" },
+        { "name": "Charlie Jane Anders", "identifier": "https://bsky.app/profile/charliejane.bsky.social" },
+        { "name": "Martha Wells", "identifier": "https://bsky.app/profile/marthawells.bsky.social" },
+        { "name": "Annalee Newitz", "identifier": "https://bsky.app/profile/annaleen.bsky.social" },
+        { "name": "Tochi Onyebuchi", "identifier": "https://bsky.app/profile/tochi.bsky.social" },
+        { "name": "Becky Chambers", "identifier": "https://bsky.app/profile/beckychambers.bsky.social" },
+        { "name": "Clarkesworld", "identifier": "https://bsky.app/profile/clarkesworld.bsky.social" },
+        { "name": "Tor Books", "identifier": "https://bsky.app/profile/torbooks.bsky.social" },
+        { "name": "Boing Boing", "identifier": "@BoingBoing@mastodon.social" }
+      ]
+    },
+    {
+      "id": "palestinian-journalists",
+      "title": "Palestinian journalists",
+      "description": "Ground reporters and newsrooms covering Palestine. Prefer journalists/media; Bluesky members need Bridgy Fed opt-in.",
+      "naddr": null,
+      "members": [
+        { "name": "Mondoweiss", "identifier": "@mondoweiss@mastodon.social" },
+        { "name": "Mondoweiss (Bluesky)", "identifier": "https://bsky.app/profile/mondoweiss.net" },
+        { "name": "The New Arab", "identifier": "https://bsky.app/profile/thenewarab.bsky.social" },
+        { "name": "+972 Magazine", "identifier": "https://bsky.app/profile/972mag.com" },
+        { "name": "Electronic Intifada", "identifier": "https://bsky.app/profile/electronicintifada.net" },
+        { "name": "Drop Site News", "identifier": "https://bsky.app/profile/dropsitenews.com" },
+        { "name": "Al-Haq", "identifier": "https://bsky.app/profile/alhaq.org" },
+        { "name": "Democracy Now", "identifier": "@democracynow@newsie.social" },
+        { "name": "ProPublica", "identifier": "@ProPublica@newsie.social" },
+        { "name": "Associated Press", "identifier": "@AP@mastodon.social" }
+      ]
+    },
+    {
+      "id": "creative-commons",
+      "title": "Creative Commons",
+      "description": "Open licensing, public domain, and commons institutions on the fediverse.",
+      "naddr": null,
+      "members": [
+        { "name": "Creative Commons", "identifier": "@creativecommons@mastodon.social" },
+        { "name": "Internet Archive", "identifier": "@internetarchive@mastodon.archive.org" },
+        { "name": "Wikimedia Foundation", "identifier": "@wikimediafoundation@mastodon.social" },
+        { "name": "Wikipedia", "identifier": "@wikipedia@wikis.world" },
+        { "name": "Wikimedia Deutschland", "identifier": "@wikimediaDE@social.wikimedia.de" },
+        { "name": "Free Software Foundation", "identifier": "@fsf@mastodon.social" },
+        { "name": "FSFE", "identifier": "@fsfe@mastodon.social" },
+        { "name": "Mozilla", "identifier": "@mozilla@mastodon.social" },
+        { "name": "Framasoft", "identifier": "@framasoft@framapiaf.org" },
+        { "name": "Internet Archive (Nostr)", "identifier": "npub13f3xuy2gmlmpctnv3z4c0rte3ntsl7kflwcrkt97zrltlq68d5ws0pfd3f" }
+      ]
+    },
+    {
+      "id": "digital-rights",
+      "title": "Digital rights",
+      "description": "Privacy, free speech, and digital civil liberties orgs.",
+      "naddr": null,
+      "members": [
+        { "name": "EFF", "identifier": "@eff@mastodon.social" },
+        { "name": "Tor Project", "identifier": "@torproject@mastodon.social" },
+        { "name": "Access Now", "identifier": "@accessnow@mastodon.social" },
+        { "name": "Freedom of the Press Foundation", "identifier": "@FreedomofPress@newsie.social" },
+        { "name": "Signal", "identifier": "@signalapp@mastodon.world" },
+        { "name": "Meredith Whittaker", "identifier": "@Mer__edith@mastodon.world" },
+        { "name": "EDRi", "identifier": "@edri@eupolicy.social" },
+        { "name": "Fight for the Future", "identifier": "npub1jcwuf0dh5vqsq44qavygqwjfecawf53fmx7gadlcdtuexz0548hqy4jyrz" },
+        { "name": "Open Rights Group", "identifier": "@OpenRightsgroup@mastodon.social" },
+        { "name": "EFF (Nostr)", "identifier": "npub1q40jtk09x6mdmmlw09qracctqpgsr9zl2hcc7wzf8vuwasqsncwsxgaa27" }
+      ]
+    },
+    {
+      "id": "fediverse-builders",
+      "title": "Fediverse builders",
+      "description": "People and projects building ActivityPub and the wider fediverse.",
+      "naddr": null,
+      "members": [
+        { "name": "Mastodon", "identifier": "@Mastodon@mastodon.social" },
+        { "name": "Eugen Rochko", "identifier": "@Gargron@mastodon.social" },
+        { "name": "Pixelfed", "identifier": "@pixelfed@mastodon.social" },
+        { "name": "ActivityPub", "identifier": "@ActivityPub@mastodon.social" },
+        { "name": "Emelia Smith", "identifier": "@thisismissem@hachyderm.io" },
+        { "name": "We Distribute", "identifier": "npub1w9wuqc3s6lr25c4sgj52werj3tngvt43qrccqrher4wvn7tjm32s2ck403" },
+        { "name": "Alex Gleason (Soapbox/Mostr)", "identifier": "npub1q3sle0kvfsehgsuexttt3ugjd8xdklxfwwkh559wxckmzddywnws6cd26p" },
+        { "name": "FSFE", "identifier": "@fsfe@mastodon.social" },
+        { "name": "Framasoft", "identifier": "@framasoft@framapiaf.org" },
+        { "name": "La Quadrature du Net", "identifier": "@LaQuadrature@mamot.fr" }
+      ]
+    },
+    {
+      "id": "nostr-builders",
+      "title": "Nostr builders",
+      "description": "Client, relay, and protocol people shaping Nostr.",
+      "naddr": null,
+      "members": [
+        { "name": "fiatjaf", "identifier": "npub180cvv07tjdrrgpa0j7j7tmnyl2yr6yr7l8j4s3evf6u64th6gkwsyjh6w6" },
+        { "name": "jb55 (Damus)", "identifier": "npub1xtscya34g58tk0z605fvr788k263gsu6cy9x0mhnm87echrgufzsevkk5s" },
+        { "name": "Vitor Pamplona (Amethyst)", "identifier": "npub1gcxzte5zlkncx26j68ez60fzkvtkm9e0vrwdcvsjakxf9mu9qewqlfnj5z" },
+        { "name": "Derek Ross", "identifier": "npub18ams6ewn5aj2n3wt2qawzglx9mr4nzksxhvrdc4gzrecw7n5tvjqctp424" },
+        { "name": "Alex Gleason (Soapbox/Mostr)", "identifier": "npub1q3sle0kvfsehgsuexttt3ugjd8xdklxfwwkh559wxckmzddywnws6cd26p" },
+        { "name": "Melvin Carvalho", "identifier": "npub1melv683fw6n2mvhl5h6dhqd8mqfv3wmxnz4qph83ua4dk4006ezsrt5c24" },
+        { "name": "We Distribute", "identifier": "npub1w9wuqc3s6lr25c4sgj52werj3tngvt43qrccqrher4wvn7tjm32s2ck403" },
+        { "name": "Matt Birchler", "identifier": "npub13huwfylt3hm77wxk9js63k0y3p03u3xhj39z49hnkdcydvp0ph6sr573xv" }
+      ]
+    },
+    {
+      "id": "hitchhikers",
+      "title": "Hitchhikers",
+      "description": "Mapped to the Trustroots Hitchhikers circle — travel, rideshares, and adventure voices on the open web.",
+      "naddr": null,
+      "members": [
+        { "name": "Cory Doctorow", "identifier": "@pluralistic@mamot.fr" },
+        { "name": "Boing Boing", "identifier": "@BoingBoing@mastodon.social" },
+        { "name": "Van life", "identifier": "@vanlife@mastodon.social" },
+        { "name": "Outdoors", "identifier": "@outdoors@mastodon.social" },
+        { "name": "REI", "identifier": "@rei@mastodon.social" },
+        { "name": "AllTrails", "identifier": "https://bsky.app/profile/alltrails.com" },
+        { "name": "Greenpeace", "identifier": "@Greenpeace@mastodon.social" },
+        { "name": "Slow Food", "identifier": "@SlowFood@mastodon.social" }
+      ]
+    },
+    {
+      "id": "nomads",
+      "title": "Nomads",
+      "description": "Mapped to the Trustroots Nomads circle — long-term travel and van-adjacent accounts.",
+      "naddr": null,
+      "members": [
+        { "name": "Van life", "identifier": "@vanlife@mastodon.social" },
+        { "name": "Van life (Bluesky)", "identifier": "https://bsky.app/profile/vanlife.bsky.social" },
+        { "name": "Outdoors", "identifier": "@outdoors@mastodon.social" },
+        { "name": "REI", "identifier": "@rei@mastodon.social" },
+        { "name": "AllTrails", "identifier": "https://bsky.app/profile/alltrails.com" },
+        { "name": "Bikepacking.com", "identifier": "https://bsky.app/profile/bikepacking.com" },
+        { "name": "Cycling UK", "identifier": "https://bsky.app/profile/cyclinguk.org" },
+        { "name": "Permaculture", "identifier": "@Permaculture@mastodon.social" }
+      ]
+    },
+    {
+      "id": "hikers",
+      "title": "Hikers",
+      "description": "Mapped to the Trustroots Hikers circle — trails, outdoors, and foot travel.",
+      "naddr": null,
+      "members": [
+        { "name": "Outdoors", "identifier": "@outdoors@mastodon.social" },
+        { "name": "REI", "identifier": "@rei@mastodon.social" },
+        { "name": "AllTrails", "identifier": "https://bsky.app/profile/alltrails.com" },
+        { "name": "Greenpeace", "identifier": "@Greenpeace@mastodon.social" },
+        { "name": "Permaculture", "identifier": "@Permaculture@mastodon.social" },
+        { "name": "Zero Waste", "identifier": "@ZeroWaste@mastodon.social" },
+        { "name": "Slow Food", "identifier": "@SlowFood@mastodon.social" },
+        { "name": "Bikepacking.com", "identifier": "https://bsky.app/profile/bikepacking.com" }
+      ]
+    },
+    {
+      "id": "vegans-vegetarians",
+      "title": "Vegans & Vegetarians",
+      "description": "Mapped to the Trustroots Vegans & Vegetarians circle.",
+      "naddr": null,
+      "members": [
+        { "name": "PETA", "identifier": "@PETA@mastodon.social" },
+        { "name": "Slow Food", "identifier": "@SlowFood@mastodon.social" },
+        { "name": "Permaculture", "identifier": "@Permaculture@mastodon.social" },
+        { "name": "Zero Waste", "identifier": "@ZeroWaste@mastodon.social" },
+        { "name": "Greenpeace", "identifier": "@Greenpeace@mastodon.social" },
+        { "name": "Extinction Rebellion", "identifier": "@xr@social.rebellion.global" },
+        { "name": "Framasoft", "identifier": "@framasoft@framapiaf.org" },
+        { "name": "Creative Commons", "identifier": "@creativecommons@mastodon.social" }
+      ]
+    },
+    {
+      "id": "ecoliving",
+      "title": "Ecoliving",
+      "description": "Mapped to the Trustroots Ecoliving circle — low-impact living (not climate-science orgs).",
+      "naddr": null,
+      "members": [
+        { "name": "Zero Waste", "identifier": "@ZeroWaste@mastodon.social" },
+        { "name": "Permaculture", "identifier": "@Permaculture@mastodon.social" },
+        { "name": "Slow Food", "identifier": "@SlowFood@mastodon.social" },
+        { "name": "Greenpeace", "identifier": "@Greenpeace@mastodon.social" },
+        { "name": "Extinction Rebellion", "identifier": "@xr@social.rebellion.global" },
+        { "name": "Internet Archive", "identifier": "@internetarchive@mastodon.archive.org" },
+        { "name": "Creative Commons", "identifier": "@creativecommons@mastodon.social" },
+        { "name": "FSFE", "identifier": "@fsfe@mastodon.social" }
+      ]
+    },
+    {
+      "id": "dumpster-divers",
+      "title": "Dumpster divers",
+      "description": "Mapped to the Trustroots Dumpster divers circle — freegan, food rescue, and anti-waste voices.",
+      "naddr": null,
+      "members": [
+        { "name": "Zero Waste", "identifier": "@ZeroWaste@mastodon.social" },
+        { "name": "Slow Food", "identifier": "@SlowFood@mastodon.social" },
+        { "name": "Permaculture", "identifier": "@Permaculture@mastodon.social" },
+        { "name": "Extinction Rebellion", "identifier": "@xr@social.rebellion.global" },
+        { "name": "Greenpeace", "identifier": "@Greenpeace@mastodon.social" },
+        { "name": "PETA", "identifier": "@PETA@mastodon.social" },
+        { "name": "Framasoft", "identifier": "@framasoft@framapiaf.org" },
+        { "name": "Internet Archive", "identifier": "@internetarchive@mastodon.archive.org" }
+      ]
+    },
+    {
+      "id": "cyclists",
+      "title": "Cyclists",
+      "description": "Mapped to the Trustroots Cyclists circle — bike touring and urban cycling.",
+      "naddr": null,
+      "members": [
+        { "name": "Bikepacking.com", "identifier": "https://bsky.app/profile/bikepacking.com" },
+        { "name": "Cycling UK", "identifier": "https://bsky.app/profile/cyclinguk.org" },
+        { "name": "Fietsersbond", "identifier": "@fietsersbond@mastodon.nl" },
+        { "name": "ANWB", "identifier": "@ANWB@mastodon.social" },
+        { "name": "Outdoors", "identifier": "@outdoors@mastodon.social" },
+        { "name": "REI", "identifier": "@rei@mastodon.social" },
+        { "name": "AllTrails", "identifier": "https://bsky.app/profile/alltrails.com" },
+        { "name": "Van life", "identifier": "@vanlife@mastodon.social" }
+      ]
+    },
+    {
+      "id": "french",
+      "title": "French",
+      "description": "Media, digital rights, and open-web accounts that post primarily in French.",
+      "naddr": null,
+      "members": [
+        { "name": "Le Monde", "identifier": "@lemonde@mastodon.social" },
+        { "name": "Mediapart", "identifier": "@Mediapart@mastodon.social" },
+        { "name": "franceinfo", "identifier": "@franceinfo@piaille.fr" },
+        { "name": "AFP FR", "identifier": "@afpfr@mastodon.social" },
+        { "name": "La Quadrature du Net", "identifier": "@LaQuadrature@mamot.fr" },
+        { "name": "Next INpact", "identifier": "@NextINpact@mamot.fr" },
+        { "name": "Framasoft", "identifier": "@framasoft@framapiaf.org" },
+        { "name": "Cory Doctorow", "identifier": "@pluralistic@mamot.fr" },
+        { "name": "Edwy Plenel", "identifier": "@EdwyPlenel@mamot.fr" },
+        { "name": "FSFE", "identifier": "@fsfe@mastodon.social" }
+      ]
+    },
+    {
+      "id": "spanish",
+      "title": "Spanish",
+      "description": "Media, digital rights, and open-web accounts that post primarily in Spanish.",
+      "naddr": null,
+      "members": [
+        { "name": "El País", "identifier": "@elpais@mastodon.social" },
+        { "name": "elDiario.es", "identifier": "@eldiario@mastodon.social" },
+        { "name": "Público", "identifier": "@publico@mastodon.social" },
+        { "name": "ABC", "identifier": "@ABC@mastodon.social" },
+        { "name": "EFE", "identifier": "@efe@mastodon.online" },
+        { "name": "Derechos Digitales", "identifier": "@derechosdigitales@mastodon.social" },
+        { "name": "EDRi", "identifier": "@edri@eupolicy.social" },
+        { "name": "Creative Commons", "identifier": "@creativecommons@mastodon.social" },
+        { "name": "Greenpeace", "identifier": "@Greenpeace@mastodon.social" },
+        { "name": "FSFE", "identifier": "@fsfe@mastodon.social" }
+      ]
+    },
+    {
+      "id": "portuguese",
+      "title": "Portuguese",
+      "description": "Media and commons accounts that post primarily in Portuguese (Portugal / Brazil).",
+      "naddr": null,
+      "members": [
+        { "name": "Público (PT)", "identifier": "@publico@masto.pt" },
+        { "name": "Folha de S.Paulo", "identifier": "@folha@mastodon.social" },
+        { "name": "Folha (mas.to)", "identifier": "@folha@mas.to" },
+        { "name": "Creative Commons", "identifier": "@creativecommons@mastodon.social" },
+        { "name": "Internet Archive", "identifier": "@internetarchive@mastodon.archive.org" },
+        { "name": "Wikimedia Foundation", "identifier": "@wikimediafoundation@mastodon.social" },
+        { "name": "FSFE", "identifier": "@fsfe@mastodon.social" },
+        { "name": "EFF", "identifier": "@eff@mastodon.social" },
+        { "name": "Access Now", "identifier": "@accessnow@mastodon.social" },
+        { "name": "Mozilla", "identifier": "@mozilla@mastodon.social" }
+      ]
+    },
+    {
+      "id": "german",
+      "title": "German",
+      "description": "Media, netzpolitik, and open-web accounts that post primarily in German.",
+      "naddr": null,
+      "members": [
+        { "name": "tagesschau", "identifier": "@tagesschau@ard.social" },
+        { "name": "netzpolitik.org", "identifier": "@netzpolitik_feed@chaos.social" },
+        { "name": "heise online", "identifier": "@heiseonline@social.heise.de" },
+        { "name": "taz", "identifier": "@tazgetroete@mastodon.social" },
+        { "name": "nd", "identifier": "@ndaktuell@troet.cafe" },
+        { "name": "Chaos Computer Club", "identifier": "@ccc@chaos.social" },
+        { "name": "Chaos updates", "identifier": "@chaosupdates@chaos.social" },
+        { "name": "Wikimedia Deutschland", "identifier": "@wikimediaDE@social.wikimedia.de" },
+        { "name": "FSFE", "identifier": "@fsfe@mastodon.social" },
+        { "name": "Bits of Freedom", "identifier": "@bitsoffreedom@chaos.social" }
+      ]
+    },
+    {
+      "id": "dutch",
+      "title": "Dutch",
+      "description": "Media, digital rights, and cycling-heavy accounts that post primarily in Dutch.",
+      "naddr": null,
+      "members": [
+        { "name": "NOS", "identifier": "@NOS@mastodon.social" },
+        { "name": "Bits of Freedom", "identifier": "@bitsoffreedom@chaos.social" },
+        { "name": "Fietsersbond", "identifier": "@fietsersbond@mastodon.nl" },
+        { "name": "ANWB", "identifier": "@ANWB@mastodon.social" },
+        { "name": "FSFE", "identifier": "@fsfe@mastodon.social" },
+        { "name": "EDRi", "identifier": "@edri@eupolicy.social" },
+        { "name": "EFF", "identifier": "@eff@mastodon.social" },
+        { "name": "Tor Project", "identifier": "@torproject@mastodon.social" },
+        { "name": "Creative Commons", "identifier": "@creativecommons@mastodon.social" },
+        { "name": "Greenpeace", "identifier": "@Greenpeace@mastodon.social" }
+      ]
+    },
+    {
+      "id": "italian",
+      "title": "Italian",
+      "description": "Media and open-web accounts that post primarily in Italian.",
+      "naddr": null,
+      "members": [
+        { "name": "RAI", "identifier": "@rai@mastodon.social" },
+        { "name": "Valigia Blu", "identifier": "@valigiablu@mastodon.uno" },
+        { "name": "EDRi", "identifier": "@edri@eupolicy.social" },
+        { "name": "Open Rights Group", "identifier": "@OpenRightsgroup@mastodon.social" },
+        { "name": "FSFE", "identifier": "@fsfe@mastodon.social" },
+        { "name": "Creative Commons", "identifier": "@creativecommons@mastodon.social" },
+        { "name": "Internet Archive", "identifier": "@internetarchive@mastodon.archive.org" },
+        { "name": "Wikimedia Foundation", "identifier": "@wikimediafoundation@mastodon.social" },
+        { "name": "EFF", "identifier": "@eff@mastodon.social" },
+        { "name": "Mastodon", "identifier": "@Mastodon@mastodon.social" }
+      ]
     }
   ]
 }
