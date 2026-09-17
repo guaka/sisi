@@ -124,9 +124,9 @@ import Dependencies
         push(.list(list))
     }
     
-    /// Pushes a web view for the given url.
+    /// Opens an http(s) URL in Safari View Controller.
     func push(_ url: URL) {
-        push(.url(url))
+        SafariPresenter.open(url)
     }
 
     func pop() {
@@ -207,7 +207,7 @@ extension Router {
                     DeepLinkService.supportedURLSchemes.contains(scheme) {
                     DeepLinkService.handle(url, router: self)
                 } else if url.scheme == "http" || url.scheme == "https" {
-                    push(url)
+                    SafariPresenter.open(url)
                 } else {
                     await UIApplication.shared.open(url)
                 }

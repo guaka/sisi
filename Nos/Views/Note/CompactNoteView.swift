@@ -156,7 +156,10 @@ struct CompactNoteView: View {
                 .allowsHitTesting(!note.isPreview)
             }
             if note.kind == EventKind.text.rawValue, showLinkPreviews, !note.contentLinks.isEmpty {
-                GalleryView(urls: note.contentLinks, metadata: note.inlineMetadata)
+                GalleryView(
+                    urls: Array(note.contentLinks.prefix(NoteParser.maxContentLinks)),
+                    metadata: note.inlineMetadata
+                )
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -97,6 +97,47 @@ class NostrBuildAPIClientTests: XCTestCase {
             }
         }
     }
+    
+    func test_isAllowedUploadURL_accepts_nostr_build_https() throws {
+        let subject = NostrBuildAPIClient()
+        let url = try XCTUnwrap(URL(string: "https://nostr.build/api/v2/nip96/upload"))
+        XCTAssertTrue(subject.isAllowedUploadURL(url))
+        
+        let subdomain = try XCTUnwrap(URL(string: "https://cdn.nostr.build/upload"))
+        XCTAssertTrue(subject.isAllowedUploadURL(subdomain))
+    }
+    
+    func test_isAllowedUploadURL_rejects_non_allowlisted_hosts() throws {
+        let subject = NostrBuildAPIClient()
+        let evil = try XCTUnwrap(URL(string: "https://evil.example/upload"))
+        XCTAssertFalse(subject.isAllowedUploadURL(evil))
+        
+        let http = try XCTUnwrap(URL(string: "http://nostr.build/upload"))
+        XCTAssertFalse(subject.isAllowedUploadURL(http))
+        
+        let lookalike = try XCTUnwrap(URL(string: "https://notnostr.build/upload"))
+        XCTAssertFalse(subject.isAllowedUploadURL(lookalike))
+    }
+    
+    func test_upload_throws_error_when_serverInfo_apiUrl_is_not_allowlisted() async throws {
+        let subject = NostrBuildAPIClient()
+        subject.serverInfo = FileStorageServerInfoResponseJSON(apiUrl: "https://evil.example/upload")
+        let fileURL = try XCTUnwrap(
+            Bundle.current.url(forResource: "nostr_build_nip96_response", withExtension: "json")
+        )
+        
+        do {
+            _ = try await subject.upload(fileAt: fileURL, isProfilePhoto: false)
+            XCTFail("Expected an error to be thrown")
+        } catch {
+            switch error {
+            case FileStorageAPIClientError.invalidURLRequest:
+                break
+            default:
+                XCTFail("Expected an invalidURLRequest error but got \(error)")
+            }
+        }
+    }
 
     func test_uploadRequest_authorization_header() async throws {
         // Arrange

@@ -39,7 +39,12 @@ struct PrivateKeyView: View {
                     .foregroundStyle(Color.secondaryTxt)
             }
             PrivateKeyDescription()
-            CopyKeyView("copyPrivateKey", keyString: $privateKeyString, copyButtonState: $copyButtonState)
+            CopyKeyView(
+                "copyPrivateKey",
+                keyString: $privateKeyString,
+                copyButtonState: $copyButtonState,
+                isPrivateKey: true
+            )
             Spacer()
             BigActionButton("next") {
                 state.step = .publicKey

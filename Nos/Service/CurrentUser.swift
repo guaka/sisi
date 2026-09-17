@@ -33,10 +33,10 @@ import Dependencies
     
     @MainActor func setPrivateKeyHex(_ newValue: String?) async {
         guard let privateKeyHex = newValue else {
-            let publicStatus = keychain.delete(key: keychain.keychainPrivateKey)
+            let status = keychain.delete(key: keychain.keychainPrivateKey)
             _privateKeyHex = nil
             reset()
-            print("Deleted private key from keychain with status: \(publicStatus)")
+            Log.info("Deleted private key from keychain with status: \(status)")
             return
         }
         

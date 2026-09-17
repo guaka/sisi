@@ -308,4 +308,54 @@ final class NoteParserTests: CoreDataTestCase {
         
         XCTAssertNil(components.quotedNoteID)
     }
+    
+    @MainActor func testContentWithNsecIsRedacted() throws {
+        let nsec = KeyFixture.nsec
+        let content = "do not share \(nsec) please"
+        let components = sut.components(from: content, tags: [[]], context: testContext)
+        let parsed = String(components.attributedContent.characters)
+        
+        XCTAssertFalse(parsed.contains(nsec))
+        XCTAssertTrue(parsed.contains(String(localized: "privateKeyRedacted")))
+    }
+    
+    @MainActor func testContentWithHostileMarkdownDisplayNameDoesNotCrash() throws {
+        let hex = KeyFixture.alice.publicKeyHex
+        let author = try Author.findOrCreate(by: hex, context: testContext)
+        author.displayName = "evil](https://evil.example) name"
+        try testContext.save()
+        
+        let content = "hello #[0]"
+        let tags = [["p", hex]]
+        let components = sut.components(from: content, tags: tags, context: testContext)
+        let attributedContent = components.attributedContent
+        
+        XCTAssertFalse(String(attributedContent.characters).isEmpty)
+        let evilLinks = attributedContent.links.filter { $0.value.host == "evil.example" }
+        XCTAssertTrue(evilLinks.isEmpty)
+    }
+    
+    @MainActor func testHugeContentIsTruncated() throws {
+        let huge = String(repeating: "a", count: NoteParser.maxContentLengthForDisplay + 5000)
+        let truncated = sut.truncateForDisplay(huge)
+        XCTAssertEqual(truncated.count, NoteParser.maxContentLengthForDisplay)
+        
+        let components = sut.components(from: huge, tags: [[]], context: testContext)
+        XCTAssertLessThanOrEqual(String(components.attributedContent.characters).count, NoteParser.maxContentLengthForDisplay)
+    }
+    
+    @MainActor func testSanitizeContentLinksFiltersAndCaps() throws {
+        var urls = (0..<20).compactMap { URL(string: "https://example.com/image\($0).jpg") }
+        urls.append(URL(string: "ftp://example.com/file")!)
+        urls.append(URL(string: "javascript:alert(1)")!)
+        
+        let sanitized = sut.sanitizeContentLinks(urls)
+        XCTAssertEqual(sanitized.count, NoteParser.maxContentLinks)
+        XCTAssertTrue(sanitized.allSatisfy { $0.scheme == "https" })
+    }
+    
+    func testEscapeMarkdownLinkLabel() {
+        XCTAssertEqual(sut.escapeMarkdownLinkLabel("a](b)"), "a\\](b)")
+        XCTAssertEqual(sut.escapeMarkdownLinkLabel("a[b]"), "a\\[b\\]")
+    }
 }

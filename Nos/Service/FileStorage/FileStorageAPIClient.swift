@@ -68,11 +68,21 @@ final class NostrBuildAPIClient: FileStorageAPIClient {
         }
 
         guard let apiURLString = serverInfo?.apiUrl,
-            let apiURL = URL(string: apiURLString) else {
+            let apiURL = URL(string: apiURLString),
+            isAllowedUploadURL(apiURL) else {
             throw FileStorageAPIClientError.invalidURLRequest
         }
         
         return apiURL
+    }
+    
+    /// Only allow HTTPS upload endpoints under nostr.build.
+    func isAllowedUploadURL(_ url: URL) -> Bool {
+        guard let scheme = url.scheme?.lowercased(), scheme == "https",
+            let host = url.host?.lowercased() else {
+            return false
+        }
+        return host == "nostr.build" || host.hasSuffix(".nostr.build")
     }
     
     /// The URL of the uploaded asset parsed from the API's response.

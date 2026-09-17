@@ -58,9 +58,12 @@ struct SettingsView: View {
                             imageAlignment: .right,
                             shouldFillHorizontalSpace: true
                         ) {
-                            UIPasteboard.general.string = privateKeyString
-                            copyButtonState = .copied
                             Task { @MainActor in
+                                guard await PrivateKeyAuthentication.authenticateForPrivateKeyAccess() else {
+                                    return
+                                }
+                                SecurePasteboard.copyPrivateKey(privateKeyString)
+                                copyButtonState = .copied
                                 try await Task.sleep(for: .seconds(10))
                                 copyButtonState = .copy
                             }
