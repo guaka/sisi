@@ -6,6 +6,12 @@ import RegexBuilder
 /// This struct encapsulates the algorithms that parse notes and the mentions inside the note.
 struct NoteParser {
 
+    /// Maximum characters fed into markdown parsing. Hostile notes can be much larger.
+    static let maxContentLengthForDisplay = 50_000
+    
+    /// Maximum media/link previews shown for a single note in the feed.
+    static let maxContentLinks = 12
+
     /// Components of a note that can be used to display the note in the UI.
     struct NoteDisplayComponents {
         /// The note content as attributed text with tagged entities replaced with readable names.
@@ -42,32 +48,71 @@ struct NoteParser {
     /// Parses the content and tags stored in a note and returns an attributed text with tagged entities replaced
     /// with readable names.
     func parse(content: String, tags: [[String]], context: NSManagedObjectContext) -> AttributedString {
-        let replaced = replaceTaggedNostrEntities(in: content, tags: tags, context: context)
+        let truncated = truncateForDisplay(content)
+        let replaced = replaceTaggedNostrEntities(in: truncated, tags: tags, context: context)
         let (result, _) = replaceNostrEntities(in: replaced)
-        return (try? AttributedString(
-            markdown: result,
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        )) ?? AttributedString(content)
+        return attributedString(fromMarkdown: result, fallback: truncated)
     }
     
     /// Parses the content and tags stored in a note and returns components that can be used
     /// to display the note in the UI.
     func components(from content: String, tags: [[String]], context: NSManagedObjectContext) -> NoteDisplayComponents {
+        let truncated = truncateForDisplay(content)
         let (cleanedString, urls) = URLParser().replaceUnformattedURLs(
-            in: content
+            in: truncated
         )
         let replaced = replaceTaggedNostrEntities(in: cleanedString, tags: tags, context: context)
         let (result, quotedNoteID) = replaceNostrEntities(in: replaced, capturesFirstNote: true)
         
-        let attributedContent = (try? AttributedString(
-            markdown: result.trimmingCharacters(in: .whitespacesAndNewlines),
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        )) ?? AttributedString(content)
+        let attributedContent = attributedString(
+            fromMarkdown: result.trimmingCharacters(in: .whitespacesAndNewlines),
+            fallback: truncated
+        )
         return NoteDisplayComponents(
             attributedContent: attributedContent,
-            contentLinks: urls,
+            contentLinks: sanitizeContentLinks(urls),
             quotedNoteID: quotedNoteID
         )
+    }
+    
+    /// Truncates hostile/oversized note bodies before expensive markdown work.
+    func truncateForDisplay(_ content: String) -> String {
+        guard content.count > Self.maxContentLengthForDisplay else {
+            return content
+        }
+        let endIndex = content.index(content.startIndex, offsetBy: Self.maxContentLengthForDisplay)
+        return String(content[..<endIndex])
+    }
+    
+    /// Keeps only http(s) URLs and caps how many previews a note can spawn.
+    func sanitizeContentLinks(_ urls: [URL]) -> [URL] {
+        urls
+            .filter { url in
+                guard let scheme = url.scheme?.lowercased() else { return false }
+                return scheme == "http" || scheme == "https"
+            }
+            .prefix(Self.maxContentLinks)
+            .map { $0 }
+    }
+    
+    /// Escapes characters that would break a markdown link label when interpolating untrusted text.
+    func escapeMarkdownLinkLabel(_ text: String) -> String {
+        text
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "[", with: "\\[")
+            .replacingOccurrences(of: "]", with: "\\]")
+    }
+    
+    private func attributedString(fromMarkdown markdown: String, fallback: String) -> AttributedString {
+        do {
+            return try AttributedString(
+                markdown: markdown,
+                options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+            )
+        } catch {
+            Log.debug("NoteParser markdown failed; using plain text fallback")
+            return AttributedString(fallback)
+        }
     }
 
     // swiftlint:disable function_body_length
@@ -87,22 +132,26 @@ struct NoteParser {
             if firstCharacter.range(of: #"\s|\r\n|\r|\n"#, options: .regularExpression) != nil {
                 prefix = firstCharacter
             }
-            let findAndReplaceAuthorReference: (String) -> String = { hex in
+            let findAndReplaceAuthorReference: (String) -> String = { [self] hex in
                 context.performAndWait {
                     if let author = try? Author.findOrCreate(by: hex, context: context) {
-                        return "\(prefix)[@\(author.safeName)](@\(hex))"
+                        let label = escapeMarkdownLinkLabel("@\(author.safeName)")
+                        return "\(prefix)[\(label)](@\(hex))"
                     } else {
-                        return "\(prefix)[@\(hex)](@\(hex))"
+                        let label = escapeMarkdownLinkLabel("@\(hex)")
+                        return "\(prefix)[\(label)](@\(hex))"
                     }
                 }
             }
-            let findAndReplaceEventReference: (String) -> String = { hex in
+            let findAndReplaceEventReference: (String) -> String = { [self] hex in
                 context.performAndWait {
                     if let event = try? Event.findOrCreateStubBy(id: hex, context: context),
                         let bech32NoteID = event.bech32NoteID {
-                        return "\(prefix)[@\(bech32NoteID)](%\(hex))"
+                        let label = escapeMarkdownLinkLabel("@\(bech32NoteID)")
+                        return "\(prefix)[\(label)](%\(hex))"
                     } else {
-                        return "\(prefix)[@\(hex)](%\(hex))"
+                        let label = escapeMarkdownLinkLabel("@\(hex)")
+                        return "\(prefix)[\(label)](%\(hex))"
                     }
                 }
             }
@@ -147,7 +196,7 @@ struct NoteParser {
     func replaceNostrEntities(in content: String, capturesFirstNote: Bool = false) -> (String, RawEventID?) {
         // Note: This pattern contains a lookbehind, which is not currently supported by the newer Swift regex syntax.
         // The pattern matches Nostr entities with or without the "nostr:" prefix 
-        let pattern = "(?<=^|\\s|[^:\\/])@?(?:nostr:)?((npub1|note1|nprofile1|nevent1|naddr1)[a-zA-Z0-9]{58,})"
+        let pattern = "(?<=^|\\s|[^:\\/])@?(?:nostr:)?((npub1|note1|nprofile1|nevent1|naddr1|nsec1)[a-zA-Z0-9]{58,})"
         let regex = try! NSRegularExpression(pattern: pattern, options: []) // swiftlint:disable:this force_try
         
         var firstNoteID: RawEventID?
@@ -175,20 +224,23 @@ struct NoteParser {
                 let identifier = try NostrIdentifier.decode(bech32String: entity)
                 switch identifier {
                 case .npub(let rawAuthorID), .nprofile(let rawAuthorID, _):
-                    return "\(prefix)[\(entity)](@\(rawAuthorID))"
+                    let label = escapeMarkdownLinkLabel(entity)
+                    return "\(prefix)[\(label)](@\(rawAuthorID))"
                 case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
                     if capturesFirstNote && firstNoteID == nil {
                         firstNoteID = rawEventID
                         return ""
                     } else {
                         // Always ensure we have exactly one "nostr:" prefix
-                        return "\(prefix)[\(String(localized: .localizable.linkToNote))](nostr:%\(rawEventID))"
+                        let label = escapeMarkdownLinkLabel(String(localized: .localizable.linkToNote))
+                        return "\(prefix)[\(label)](nostr:%\(rawEventID))"
                     }
                 case .naddr(let replaceableID, _, let authorID, let kind):
-                    return "\(prefix)[\(String(localized: .localizable.linkToNote))]" +
+                    let label = escapeMarkdownLinkLabel(String(localized: .localizable.linkToNote))
+                    return "\(prefix)[\(label)]" +
                     "($\(replaceableID);\(authorID);\(kind))"
                 case .nsec:
-                    return substring
+                    return "\(prefix)\(String(localized: "privateKeyRedacted"))"
                 }
             } catch {
                 return substring

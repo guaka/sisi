@@ -108,7 +108,7 @@ final class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject,
         // because we batch updates together to reduce animations but this function is called in between batches we
         // need to account for the number of items queued for insertion or deletion. FetchedResultsController sees them
         // but the collectionView doesn't yet.
-        let numberOfItemsInView = numberOfFetchedObjects - insertedIndexes.count + deletedIndexes.count
+        let numberOfItemsInView = max(0, numberOfFetchedObjects - insertedIndexes.count + deletedIndexes.count)
         return numberOfItemsInView
     }
     
@@ -118,7 +118,16 @@ final class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject,
     ) -> UICollectionViewCell {
         loadMoreIfNeeded(for: indexPath)
         
-        let note = fetchedResultsController.object(at: indexPath)
+        guard let note = event(at: indexPath) else {
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: registerEmptyCellReuseID(in: collectionView),
+                for: indexPath
+            )
+            cell.contentConfiguration = UIHostingConfiguration {
+                EmptyView()
+            }
+            return cell
+        }
 
         // We intentionally generate unique IDs for cell reuse to get around 
         // [this issue](https://github.com/planetary-social/nos/issues/873)
@@ -144,9 +153,26 @@ final class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject,
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            let note = fetchedResultsController.object(at: indexPath)
+            guard let note = event(at: indexPath) else { continue }
             Task { await note.loadViewData() }
         }
+    }
+    
+    /// Safely returns an event for the given index path when FRC and the collection view briefly disagree.
+    private func event(at indexPath: IndexPath) -> Event? {
+        guard let objects = fetchedResultsController.fetchedObjects,
+            indexPath.section == 0,
+            indexPath.item >= 0,
+            indexPath.item < objects.count else {
+            return nil
+        }
+        return objects[indexPath.item]
+    }
+    
+    private func registerEmptyCellReuseID(in collectionView: UICollectionView) -> String {
+        let reuseID = "EmptyNoteCell"
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseID)
+        return reuseID
     }
     
     func collectionView(
@@ -313,7 +339,8 @@ final class PagedNoteDataSource<Header: View, EmptyPlaceholder: View>: NSObject,
                 movedIndexes.append((oldIndexPath, newIndexPath)) 
             }
         @unknown default:
-            fatalError("Unexpected NSFetchedResultsChangeType: \(type)")
+            Log.error("Unexpected NSFetchedResultsChangeType: \(type.rawValue)")
+            return
         }
     }
     

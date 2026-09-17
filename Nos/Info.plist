@@ -48,6 +48,8 @@
 		<string>remote-notification</string>
 		<string>processing</string>
 	</array>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Nos uses Face ID to confirm you want to copy your private key.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Nos uses the microphone when you are record a video from within the app.</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>

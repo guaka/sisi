@@ -156,9 +156,17 @@ class Event: NosManagedObject, VerifiableEvent {
     
     /// Instructs this event to load supplementary data like author name and photo, reference events, and produce
     /// formatted `content` and cache it on this object. Idempotent.
-    @MainActor func loadViewData() async {
+    @MainActor func loadViewData(visitedIDs: Set<RawEventID> = []) async {
         guard !loadingViewData else {
             return
+        }
+        
+        var visited = visitedIDs
+        if let identifier {
+            guard !visited.contains(identifier) else {
+                return
+            }
+            visited.insert(identifier)
         }
         
         loadingViewData = true
@@ -172,7 +180,7 @@ class Event: NosManagedObject, VerifiableEvent {
                 // TODO: how do we load details for the event again after we hydrate the stub?
             } else {
                 group.addTask {
-                    await self.loadReferencedNote()
+                    await self.loadReferencedNote(visitedIDs: visited)
                 }
                 group.addTask {
                     await self.loadAuthorMetadata()
@@ -212,9 +220,13 @@ class Event: NosManagedObject, VerifiableEvent {
     }
     
     /// Tries to load the note this note is reposting or replying to from relays.
-    @MainActor private func loadReferencedNote() async {
+    /// Only loads one hop to avoid deep recursion and reply cycles during feed prefetch.
+    @MainActor private func loadReferencedNote(visitedIDs: Set<RawEventID>) async {
+        guard visitedIDs.count <= 1 else {
+            return
+        }
         let referencedNote = referencedNote() ?? rootNote()
-        await referencedNote?.loadViewData()
+        await referencedNote?.loadViewData(visitedIDs: visitedIDs)
     }
     
     @MainActor private var loadingAttributedContent = false
@@ -234,11 +246,12 @@ class Event: NosManagedObject, VerifiableEvent {
             context: backgroundContext
         ) {
             self.attributedContent = .loaded(components.attributedContent)
-            self.contentLinks = components.contentLinks
+            self.contentLinks = NoteParser().sanitizeContentLinks(components.contentLinks)
             self.quotedNoteID = components.quotedNoteID
             Task { await loadFirstQuotedNote() }
         } else {
             self.attributedContent = .loaded(AttributedString(content ?? ""))
+            self.contentLinks = []
         }
         loadingAttributedContent = false
     }

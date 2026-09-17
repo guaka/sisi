@@ -1942,6 +1942,18 @@
         }
       }
     },
+    "authenticateToCopyPrivateKey" : {
+      "comment" : "Reason shown in the system Face ID / passcode prompt before copying a private key",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate to copy your private key"
+          }
+        }
+      }
+    },
     "attachMedia" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -14685,6 +14697,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "nsec 或十六進制..."
+          }
+        }
+      }
+    },
+    "privateKeyRedacted" : {
+      "comment" : "Placeholder shown in a note when an nsec private key appears in the content",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[private key hidden]"
           }
         }
       }
