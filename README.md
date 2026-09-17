@@ -16,7 +16,6 @@ Personal Nos fork.
 
 **Site:** [https://guaka.github.io/sisi/](https://guaka.github.io/sisi/) — catalog only; follow packs are used inside the app.
 
-
 ## Contributing 
 
 You can learn more about contributing in [CONTRIBUTING.md](CONTRIBUTING.md).

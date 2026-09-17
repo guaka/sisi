@@ -71,5 +71,8 @@ public enum EventKind: Int64, CaseIterable, Hashable {
     /// Long-form Content
     case longFormContent = 30023
 
+    /// NIP-51 Starter Pack (follow pack)
+    case starterPack = 39089
+
     // swiftlint:enable number_separator
 }

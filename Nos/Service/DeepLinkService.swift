@@ -19,6 +19,7 @@ enum DeepLinkService {
     
     @MainActor static func handle(_ url: URL, router: Router) {
         @Dependency(\.persistenceController) var persistenceController
+        @Dependency(\.relayService) var relayService
         Log.info("handling link scheme=\(url.scheme ?? "nil") host=\(url.host ?? "nil")")
         
         let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
@@ -53,11 +54,40 @@ enum DeepLinkService {
                     case .note(let rawEventID), .nevent(let rawEventID, _, _, _):
                         router.pushNote(id: rawEventID)
                     case .naddr(let replaceableID, _, let authorID, let kind):
-                        router.pushNote(
-                            replaceableID: replaceableID,
-                            authorID: authorID,
-                            kind: Int64(kind)
-                        )
+                        if Int64(kind) == EventKind.starterPack.rawValue {
+                            Task { @MainActor in
+                                var subscription: SubscriptionCancellable?
+                                defer { _ = subscription }
+                                do {
+                                    let context = persistenceController.viewContext
+                                    let owner = try Author.findOrCreate(by: authorID, context: context)
+                                    subscription = await relayService.requestStarterPack(
+                                        authorKey: authorID,
+                                        replaceableID: replaceableID
+                                    )
+                                    // Brief wait for relay ingest
+                                    try? await Task.sleep(for: .milliseconds(800))
+                                    let request = AuthorList.starterPack(replaceableID: replaceableID, owner: owner)
+                                    if let list = try context.fetch(request).first {
+                                        router.pushList(list)
+                                        return
+                                    }
+                                } catch {
+                                    Log.optional(error)
+                                }
+                                if let pack = FollowPackCatalog.loadBundled().first(where: {
+                                    $0.naddr?.contains(replaceableID) == true
+                                }) {
+                                    router.push(.followPack(pack))
+                                }
+                            }
+                        } else {
+                            router.pushNote(
+                                replaceableID: replaceableID,
+                                authorID: authorID,
+                                kind: Int64(kind)
+                            )
+                        }
                     case .nsec:
                         break
                     }
