@@ -28,6 +28,8 @@ struct SettingsView: View {
 
     @State private var showReportWarnings = true
     @State private var showOutOfNetworkWarning = true
+    @State private var blockedWords = NotificationBlocklist.words
+    @State private var newBlockedWord = ""
     @State private var copyButtonState: CopyButtonState = .copy
     @State private var showDeleteConfirmationAlert = false
 
@@ -153,6 +155,58 @@ struct SettingsView: View {
             }
 
             Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("notificationBlocklistDescription")
+                        .foregroundColor(.secondaryTxt)
+                        .font(.footnote)
+
+                    ForEach(Array(blockedWords.enumerated()), id: \.offset) { index, word in
+                        HStack {
+                            Text(word)
+                                .foregroundColor(.primaryTxt)
+                            Spacer()
+                            Button {
+                                NotificationBlocklist.remove(at: index)
+                                blockedWords = NotificationBlocklist.words
+                            } label: {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundStyle(.red)
+                            }
+                            .buttonStyle(.borderless)
+                            .accessibilityLabel("delete")
+                        }
+                    }
+
+                    HStack {
+                        TextField("notificationBlocklistPlaceholder", text: $newBlockedWord)
+                            .foregroundColor(.primaryTxt)
+                            .autocorrectionDisabled()
+                            #if os(iOS)
+                            .textInputAutocapitalization(.never)
+                            #endif
+                            .onSubmit {
+                                addBlockedWord()
+                            }
+                        SecondaryActionButton("addItem") {
+                            addBlockedWord()
+                        }
+                    }
+                }
+                .padding(.bottom, 8)
+            } header: {
+                Text("notificationBlocklist")
+                    .foregroundColor(.primaryTxt)
+                    .font(.clarity(.semibold, textStyle: .headline))
+                    .textCase(nil)
+                    .listRowInsets(EdgeInsets())
+                    .padding(.vertical, 15)
+            }
+            .listRowGradientBackground()
+            .onAppear {
+                blockedWords = NotificationBlocklist.words
+            }
+
+            Section {
                 Text("\(String(localized: "appVersion")) \(Bundle.current.versionAndBuild)")
                     .foregroundColor(.primaryTxt)
                     .padding(.vertical, 5)
@@ -265,6 +319,12 @@ struct SettingsView: View {
             .transition(.opacity)
             .animation(.easeInOut(duration: 0.2), value: showDeleteConfirmationAlert)
         }
+    }
+
+    private func addBlockedWord() {
+        NotificationBlocklist.add(newBlockedWord)
+        blockedWords = NotificationBlocklist.words
+        newBlockedWord = ""
     }
 
     fileprivate func alertButtonTapped(_ action: AlertAction) async {

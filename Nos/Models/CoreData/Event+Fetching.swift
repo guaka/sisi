@@ -67,11 +67,13 @@ extension Event {
     ///   - user: the author you want to view notifications for.
     ///   - since: a date that will be used as a lower bound for the request.
     ///   - limit: a max number of events to fetch.
+    ///   - blockedWords: words that hide a notification when they appear in event content.
     /// - Returns: A fetch request for the events described.
     @nonobjc static func all(
         notifying user: Author,
         since: Date? = nil,
-        limit: Int? = nil
+        limit: Int? = nil,
+        blockedWords: [String] = NotificationBlocklist.words
     ) -> NSFetchRequest<Event> {
         let fetchRequest = NSFetchRequest<Event>(entityName: "Event")
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Event.createdAt, ascending: false)]
@@ -91,6 +93,9 @@ extension Event {
         if let since {
             let sincePredicate = NSPredicate(format: "receivedAt >= %@", since as CVarArg)
             andPredicates.append(sincePredicate)
+        }
+        if let blockedWordsPredicate = NotificationBlocklist.excludingPredicate(words: blockedWords) {
+            andPredicates.append(blockedWordsPredicate)
         }
         fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: andPredicates)
         
