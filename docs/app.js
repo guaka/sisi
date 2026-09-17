@@ -17,6 +17,11 @@ async function loadPacks() {
       description.textContent = pack.description;
       article.appendChild(description);
 
+      const count = document.createElement("p");
+      count.className = "pack-meta";
+      count.textContent = `${(pack.members || []).length} accounts · follow in the sisi app`;
+      article.appendChild(count);
+
       const list = document.createElement("ul");
       list.className = "members";
       for (const member of pack.members || []) {

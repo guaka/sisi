@@ -3,39 +3,58 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>sisi — a focused Nos fork</title>
+  <title>sisi — follow packs</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main>
     <header>
-      <p class="eyebrow">Nos fork · guaka/sisi</p>
+      <p class="eyebrow">Nos client</p>
       <h1>sisi</h1>
       <p class="lede">
-        A personal Nos.social fork for following people across Nostr, Mastodon, and Bluesky —
+        A Nos.social fork for following people across Nostr, Mastodon, and Bluesky —
         with curated follow packs and a daily stop after about half an hour.
       </p>
     </header>
 
     <section>
-      <h2>What it does</h2>
+      <h2>How follow packs work</h2>
+      <p class="hint">
+        <strong>Packs are used inside the sisi iOS app</strong>, not from this webpage.
+        This site is a public catalog of the same lists that ship in the app.
+      </p>
+      <ol class="steps">
+        <li>Open <strong>sisi</strong> on your phone.</li>
+        <li>Go to the <strong>Discover</strong> tab.</li>
+        <li>Tap a pack (for example “Old-school media” or “Stringer journalists”).</li>
+        <li>Review who resolved, then tap <strong>Follow all</strong>.</li>
+      </ol>
+      <p class="hint">
+        Accounts are followed on Nostr. Mastodon and Bluesky profiles are bridged via Mostr
+        (and Bridgy Fed for Bluesky). If someone hasn’t enabled the bridge, they simply won’t resolve.
+      </p>
+    </section>
+
+    <section>
+      <h2>What else it does</h2>
       <ul>
-        <li><strong>Easy follows</strong> — paste Mastodon or Bluesky profile URLs / handles; Mostr (+ Bridgy Fed for Bluesky) maps them to Nostr.</li>
-        <li><strong>Follow packs</strong> — one-tap follow for journalists, old-school media, and other curated sets (NIP-51 starter packs where available).</li>
-        <li><strong>Time nudge</strong> — soft reminder around 25 minutes; blocks the UI after 30, with two short snoozes.</li>
+        <li><strong>Easy follows</strong> — paste a Mastodon or Bluesky profile URL or handle in Discover search.</li>
+        <li><strong>Time nudge</strong> — reminder around 25 minutes; the app locks after about 30, with two short snoozes.</li>
       </ul>
     </section>
 
     <section>
-      <h2>Follow packs</h2>
-      <p class="hint">Same catalog ships in the app (<code>packs.json</code>). Bluesky accounts only resolve if they opted into Bridgy Fed.</p>
+      <h2>Catalog</h2>
+      <p class="hint">Preview of packs bundled in the app. Open sisi to follow them.</p>
       <div id="packs" class="packs"></div>
     </section>
 
     <footer>
       <p>
-        Source: <a href="https://github.com/guaka/sisi">github.com/guaka/sisi</a>
-        · Upstream: <a href="https://github.com/planetary-social/nos">Nos.social</a>
+        Source on
+        <a href="https://github.com/guaka/sisi">GitHub</a>
+        · Upstream
+        <a href="https://github.com/planetary-social/nos">Nos.social</a>
       </p>
     </footer>
   </main>
