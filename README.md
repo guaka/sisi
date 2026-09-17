@@ -6,6 +6,13 @@ Nos is a [Nostr](https://nostr.com) client inspired by our work on [planetary.so
 
 Check our website [nos.social](https://nos.social/) for more info! You can also find us on [Matrix](https://matrix.to/#/#planetary:matrix.org), [Telegram](https://t.me/planetarysocial), and [Discord](https://discord.gg/aNgVthyHac).
 
+## FORK
+
+- fix some crashes
+- harden
+- add possibility to enter mastodon/bluesky urls to follow
+
+
 ## Contributing 
 
 You can learn more about contributing in [CONTRIBUTING.md](CONTRIBUTING.md).
