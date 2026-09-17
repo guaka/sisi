@@ -257,6 +257,29 @@ extension RelayService {
         )
         return await fetchEvents(matching: followSetFilter)
     }
+
+    /// Fetches recent NIP-51 starter packs (kind 39089) from relays.
+    func requestStarterPacks(limit: Int = 50) async -> SubscriptionCancellable {
+        let filter = Filter(
+            kinds: [.starterPack],
+            limit: limit
+        )
+        return await fetchEvents(matching: filter)
+    }
+
+    /// Fetches a specific starter pack by author and replaceable id.
+    func requestStarterPack(
+        authorKey: RawAuthorID,
+        replaceableID: RawReplaceableID
+    ) async -> SubscriptionCancellable {
+        let filter = Filter(
+            authorKeys: [authorKey],
+            kinds: [.starterPack],
+            dTags: [replaceableID],
+            limit: 1
+        )
+        return await fetchEvents(matching: filter)
+    }
     
     func requestProfileData(
         for authorKey: RawAuthorID?,
@@ -886,8 +909,12 @@ extension RelayService: WebSocketDelegate {
 // MARK: NIP-05 Support
 extension RelayService {
     
-    /// Takes a NIP-05 or Mastodon username and tries to fetch the associated Nostr public key.
+    /// Takes a NIP-05, Mastodon username/URL, or Bluesky handle/URL and tries to fetch the associated Nostr public key.
     func retrievePublicKeyFromUsername(_ userName: String) async -> RawAuthorID? {
+        if let identity = FederatedProfileURL.parse(userName) {
+            return try? await fetchPublicKey(for: identity)
+        }
+
         let count = userName.filter { $0 == "@" }.count
         
         switch count {
@@ -897,6 +924,18 @@ extension RelayService {
             return try? await fetchPublicKeyFromMastodonUsername(userName)
         default:
             return nil
+        }
+    }
+
+    /// Resolves a federated identity to a Nostr pubkey via Mostr or native NIP-05.
+    func fetchPublicKey(for identity: FederatedProfileIdentity) async throws -> RawAuthorID? {
+        switch identity {
+        case .mastodon, .bluesky:
+            let mostrUsername = FederatedProfileURL.resolutionUsername(for: identity)
+            let urlString = "https://mostr.pub/.well-known/nostr.json?name=\(mostrUsername)"
+            return try await fetchPublicKey(from: urlString, username: mostrUsername)
+        case .nip05(let identifier):
+            return try await fetchPublicKeyFromNIP05(identifier)
         }
     }
     

@@ -243,49 +243,76 @@ enum SearchOrigin {
     /// Searches for the value in `query`. Only needed when the user taps the Search button since typeahead search
     /// handles other use cases.
     ///
-    /// First, checks to see if `query` contains the "@" symbol and if so, searches for the username with
+    /// First, checks Mastodon / Bluesky / NIP-05 profile URLs and handles via Mostr.
+    ///
+    /// Second, checks to see if `query` contains the "@" symbol and if so, searches for the username with
     /// the relay service. If there's a match, shows the author.
     ///
-    /// Second, checks to see if `query` matches an author's public key and if so, shows the author.
+    /// Third, checks to see if `query` matches an author's public key and if so, shows the author.
     /// 
-    /// Third, checks to see if `query` matches a note's public key and if so, shows the note.
+    /// Fourth, checks to see if `query` matches a note's public key and if so, shows the note.
     /// 
     /// Finally, if all previous checks fail, searches the relays for the given query.
     func submitSearch(query: String) {
         searchSubscriptions.removeAll()
 
-        let trimmedQuery = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmedQuery.contains("@") {
+        let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        let lowercasedQuery = trimmedQuery.lowercased()
+
+        if let identity = FederatedProfileURL.parse(trimmedQuery) {
+            state = authorResults.isEmpty ? .loading : state
+            startSearchTimer()
             Task(priority: .userInitiated) {
-                if let publicKeyHex = await relayService.retrievePublicKeyFromUsername(trimmedQuery) {
-                    Task { @MainActor in
-                        if let author = try? Author.findOrCreate(by: publicKeyHex, context: context) {
-                            if routesMatchesAutomatically {
-                                analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
-                                router.push(author)
-                            } else {
-                                authorResults = [author]
-                            }
+                if let publicKeyHex = try? await relayService.fetchPublicKey(for: identity) {
+                    await MainActor.run {
+                        presentAuthor(hex: publicKeyHex)
+                    }
+                } else {
+                    await MainActor.run {
+                        if authorResults.isEmpty {
+                            state = .stillLoading
                         }
                     }
                 }
             }
-        } else if let author = author(fromPublicKey: trimmedQuery) {
+        } else if trimmedQuery.contains("@") {
+            Task(priority: .userInitiated) {
+                if let publicKeyHex = await relayService.retrievePublicKeyFromUsername(trimmedQuery) {
+                    await MainActor.run {
+                        presentAuthor(hex: publicKeyHex)
+                    }
+                }
+            }
+        } else if let author = author(fromPublicKey: lowercasedQuery) {
             Task { @MainActor in
                 if routesMatchesAutomatically {
                     analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
                     router.push(author)
                 } else {
                     authorResults = [author]
+                    state = .results
                 }
             }
-        } else if routesMatchesAutomatically, let note = note(fromPublicKey: trimmedQuery) {
+        } else if routesMatchesAutomatically, let note = note(fromPublicKey: lowercasedQuery) {
             Task { @MainActor in
                 analytics.displayedNoteFromDiscoverSearch()
                 router.push(note)
             }
         } else {
-            search(for: trimmedQuery)
+            search(for: lowercasedQuery)
+        }
+    }
+
+    @MainActor
+    private func presentAuthor(hex: RawAuthorID) {
+        if let author = try? Author.findOrCreate(by: hex, context: context) {
+            if routesMatchesAutomatically {
+                analytics.displayedAuthorFromDiscoverSearch(resultsCount: 1)
+                router.push(author)
+            } else {
+                authorResults = [author]
+                state = .results
+            }
         }
     }
 }

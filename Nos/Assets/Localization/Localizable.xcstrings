@@ -16820,7 +16820,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search people on Nostr or the Fediverse"
+            "value" : "Search Nostr, Mastodon, or Bluesky"
           }
         },
         "es" : {
