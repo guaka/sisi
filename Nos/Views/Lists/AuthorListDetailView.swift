@@ -15,6 +15,12 @@ struct AuthorListDetailView: View {
     
     @State private var showingEditListInfo = false
     @State private var showingManageUsers = false
+    @State private var isFollowingAll = false
+    @State private var followAllMessage: String?
+
+    private var isStarterPack: Bool {
+        list.kind == EventKind.starterPack.rawValue
+    }
 
     var body: some View {
         ScrollView {
@@ -35,6 +41,20 @@ struct AuthorListDetailView: View {
                             .foregroundStyle(Color.secondaryTxt)
                             .font(.footnote)
                             .padding(.top, 8)
+                    }
+                }
+
+                if isStarterPack {
+                    ActionButton(title: "Follow all") {
+                        await followAll()
+                    }
+                    .disabled(list.allAuthors.isEmpty || isFollowingAll)
+                    .padding(.horizontal, 24)
+
+                    if let followAllMessage {
+                        Text(followAllMessage)
+                            .font(.footnote)
+                            .foregroundStyle(Color.secondaryTxt)
                     }
                 }
             }
@@ -68,22 +88,24 @@ struct AuthorListDetailView: View {
         .nosNavigationBar("")
         .background(Color.appBg)
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Menu {
-                    Button("editListInfo") {
-                        showingEditListInfo = true
+            if !isStarterPack {
+                ToolbarItem(placement: .primaryAction) {
+                    Menu {
+                        Button("editListInfo") {
+                            showingEditListInfo = true
+                        }
+                        Button("manageUsers") {
+                            showingManageUsers = true
+                        }
+                        Button("deleteList", role: .destructive) {
+                            deleteList()
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .foregroundStyle(Color.secondaryTxt)
+                            .fontWeight(.bold)
+                            .padding(.vertical, 12)
                     }
-                    Button("manageUsers") {
-                        showingManageUsers = true
-                    }
-                    Button("deleteList", role: .destructive) {
-                        deleteList()
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .foregroundStyle(Color.secondaryTxt)
-                        .fontWeight(.bold)
-                        .padding(.vertical, 12)
                 }
             }
         }
@@ -107,6 +129,18 @@ struct AuthorListDetailView: View {
         Task {
             await currentUser.publishDelete(for: replaceableID, kind: list.kind)
             dismiss()
+        }
+    }
+
+    private func followAll() async {
+        isFollowingAll = true
+        defer { isFollowingAll = false }
+        do {
+            let authors = Array(list.allAuthors)
+            try await currentUser.follow(authors: authors)
+            followAllMessage = "Followed \(authors.count) accounts"
+        } catch {
+            followAllMessage = "Could not follow everyone"
         }
     }
 }

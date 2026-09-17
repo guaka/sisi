@@ -5,6 +5,7 @@ enum NosNavigationDestination: Hashable {
     case note(NoteIdentifiable)
     case author(RawAuthorID?)
     case list(AuthorList)
+    case followPack(FollowPack)
     case replyTo(RawEventID?)
 }
 
