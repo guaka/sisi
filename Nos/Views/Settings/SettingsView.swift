@@ -12,6 +12,7 @@ struct SettingsView: View {
     @Dependency(\.persistenceController) private var persistenceController
     @Dependency(\.userDefaults) private var userDefaults
     @Dependency(\.featureFlags) private var featureFlags
+    @Dependency(\.usageLimiter) private var usageLimiter
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(AppController.self) var appController
     @Environment(CurrentUser.self) private var currentUser
@@ -156,6 +157,34 @@ struct SettingsView: View {
                 showReportWarnings = userDefaults.object(forKey: showReportWarningsKey) as? Bool ?? true
                 showOutOfNetworkWarning = userDefaults.object(forKey: showOutOfNetworkWarningKey) as? Bool ?? true
             }
+
+            Section {
+                VStack {
+                    NosToggle(
+                        "Daily usage limit",
+                        isOn: Binding(
+                            get: { usageLimiter.isEnabled },
+                            set: { usageLimiter.isEnabled = $0 }
+                        )
+                    )
+
+                    HStack {
+                        Text("Nudge after 25 minutes; block after 30 (with two 5-minute snoozes).")
+                            .foregroundColor(.secondaryTxt)
+                            .font(.footnote)
+                        Spacer()
+                    }
+                }
+                .padding(.bottom, 8)
+            } header: {
+                Text("Wellbeing")
+                    .foregroundColor(.primaryTxt)
+                    .font(.clarity(.semibold, textStyle: .headline))
+                    .textCase(nil)
+                    .listRowInsets(EdgeInsets())
+                    .padding(.vertical, 15)
+            }
+            .listRowGradientBackground()
 
             Section {
                 VStack(alignment: .leading, spacing: 8) {
