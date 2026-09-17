@@ -198,6 +198,7 @@ extension CurrentUser {
         var followKeys = await Array(socialGraph.followedKeys)
         let existing = Set(followKeys)
         let currentUserAuthor = author
+        var addedAny = false
 
         for person in toFollow {
             guard let followKey = person.hexadecimalPublicKey else {
@@ -208,6 +209,7 @@ extension CurrentUser {
 
             Log.debug("Following \(followKey)")
             followKeys.append(followKey)
+            addedAny = true
 
             if let followedAuthor = try? Author.find(by: followKey, context: viewContext),
                 let currentUserAuthor {
@@ -219,6 +221,8 @@ extension CurrentUser {
                 currentUserAuthor.follows.insert(follow)
             }
         }
+
+        guard addedAny else { return }
 
         try viewContext.save()
         await publishContactList(tags: followKeys.pTags)
