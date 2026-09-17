@@ -56,10 +56,12 @@ enum DeepLinkService {
                     case .naddr(let replaceableID, _, let authorID, let kind):
                         if Int64(kind) == EventKind.starterPack.rawValue {
                             Task { @MainActor in
+                                var subscription: SubscriptionCancellable?
+                                defer { _ = subscription }
                                 do {
                                     let context = persistenceController.viewContext
                                     let owner = try Author.findOrCreate(by: authorID, context: context)
-                                    _ = await relayService.requestStarterPack(
+                                    subscription = await relayService.requestStarterPack(
                                         authorKey: authorID,
                                         replaceableID: replaceableID
                                     )
