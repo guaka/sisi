@@ -135,6 +135,15 @@ li { margin: 0.45rem 0; }
   word-break: break-all;
 }
 
+.members a.member-id {
+  text-decoration: none;
+}
+
+.members a.member-id:hover code,
+.members a.member-id:focus-visible code {
+  text-decoration: underline;
+}
+
 footer {
   margin-top: 3rem;
   color: var(--muted);
