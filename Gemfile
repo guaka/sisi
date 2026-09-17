@@ -4,7 +4,16 @@
 
 source "https://rubygems.org"
 
-gem 'fastlane', '~> 2.222'
+gem 'fastlane', '~> 2.237'
+
+# Keep Fastlane transitive deps above Dependabot advisories.
+gem "excon", ">= 1.5.0"
+gem "addressable", ">= 2.9.0"
+gem "aws-sdk-s3", ">= 1.208.0"
+gem "faraday", ">= 1.10.6", "< 2.0"
+gem "json", ">= 2.19.9"
+gem "jwt", ">= 2.10.3"
+gem "rexml", ">= 3.4.2"
 
 plugins_path = File.join(File.dirname(__FILE__), 'fastlane', 'Pluginfile')
 eval_gemfile(plugins_path) if File.exist?(plugins_path)
