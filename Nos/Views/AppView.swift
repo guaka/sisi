@@ -12,11 +12,13 @@ struct AppView: View {
     @Dependency(\.analytics) private var analytics
     @Dependency(\.crashReporting) private var crashReporting
     @Dependency(\.userDefaults) private var userDefaults
+    @Dependency(\.usageLimiter) private var usageLimiter
     @Environment(CurrentUser.self) private var currentUser
     @Environment(RelayService.self) private var relayService
 
     @State private var lastSelectedTab = AppDestination.home
     @State private var showNIP05Wizard = false
+    @State private var showUsageNudge = false
 
     var body: some View {
         ZStack {
@@ -27,14 +29,30 @@ struct AppView: View {
             case .onboarding:
                 OnboardingView(completion: appController.completeOnboarding)
             case .loggedIn:
-                tabView
+                ZStack {
+                    tabView
+                        .overlay(alignment: .bottom) {
+                            if showUsageNudge && !usageLimiter.isLocked {
+                                UsageNudgeBanner()
+                                    .padding(.bottom, 8)
+                                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                            }
+                        }
 
-                SideMenu(
-                    menuWidth: 300,
-                    menuOpened: router.sideMenuOpened,
-                    toggleMenu: router.toggleSideMenu,
-                    closeMenu: router.closeSideMenu
-                )
+                    SideMenu(
+                        menuWidth: 300,
+                        menuOpened: router.sideMenuOpened,
+                        toggleMenu: router.toggleSideMenu,
+                        closeMenu: router.closeSideMenu
+                    )
+
+                    if usageLimiter.isLocked {
+                        UsageLockOverlay()
+                    }
+                }
+                .task(id: appController.currentState) {
+                    await monitorUsage()
+                }
             }
         }
         .onAppear(perform: appController.configureCurrentState)
@@ -171,6 +189,16 @@ struct AppView: View {
 }
 
 extension AppView {
+
+    private func monitorUsage() async {
+        while !Task.isCancelled {
+            usageLimiter.tick()
+            withAnimation {
+                showUsageNudge = usageLimiter.shouldShowNudge
+            }
+            try? await Task.sleep(for: .seconds(2))
+        }
+    }
 
     private func presentNIP05SheetIfNeeded() async {
         guard let author = currentUser.author, let npub = author.npubString else {

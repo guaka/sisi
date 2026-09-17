@@ -13,6 +13,7 @@ struct NosApp: App {
     @Dependency(\.router) private var router
     @Dependency(\.currentUser) private var currentUser
     @Dependency(\.pushNotificationService) private var pushNotificationService
+    @Dependency(\.usageLimiter) private var usageLimiter
     private let appController = AppController()
     @Environment(\.scenePhase) private var scenePhase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -47,10 +48,13 @@ struct NosApp: App {
                     switch newPhase {
                     case .inactive:
                         Log.info("Scene change: inactive")
+                        usageLimiter.appWillResignActive()
                     case .active:
                         Log.info("Scene change: active")
+                        usageLimiter.appDidBecomeActive()
                     case .background:
                         Log.info("Scene change: background")
+                        usageLimiter.appWillResignActive()
                         Task {
                             // TODO: save all contexts, not just the view and background.
                             try await persistenceController.saveAll()
