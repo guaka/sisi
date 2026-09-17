@@ -71,7 +71,9 @@ struct NotificationsView: View {
                     /// number of views displayed here and that appears to prevent @FetchRequest from loading all the
                     /// records into memory.
                     ForEach(0..<maxNotificationsToShow, id: \.self) { index in
-                        if let event = events[safe: index], let user {
+                        if let event = events[safe: index],
+                            let user,
+                            !NotificationBlocklist.containsBlockedWord(event.content) {
                             NotificationCard(viewModel: NotificationViewModel(note: event, user: user))
                                 .padding(.horizontal, 15)
                                 .padding(.bottom, 10)
@@ -93,6 +95,14 @@ struct NotificationsView: View {
             .navigationBarItems(leading: SideMenuButton())
             .refreshable {
                 await subscribeToNewEvents()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)) { _ in
+                if let user {
+                    events.nsPredicate = Event.all(
+                        notifying: user,
+                        limit: maxNotificationsToShow
+                    ).predicate
+                }
             }
             .onTabAppear(.notifications) {
                 pushNotificationService.requestNotificationPermissionsFromUser()

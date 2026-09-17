@@ -163,10 +163,11 @@ import Combine
             
             defer { try? self.modelContext.save() }
             
-            // Don't alert for old notifications or muted authors
+            // Don't alert for old notifications, muted authors, or blocked words
             guard let eventCreated = event.createdAt, 
                 eventCreated > self.showPushNotificationsAfter,
-                event.author?.muted == false else { 
+                event.author?.muted == false,
+                !NotificationBlocklist.containsBlockedWord(event.content) else { 
                 coreDataNotification.isRead = true
                 return nil
             }
@@ -222,6 +223,11 @@ import Combine
         _ center: UNUserNotificationCenter, 
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
+        let title = notification.request.content.title
+        let body = notification.request.content.body
+        if NotificationBlocklist.containsBlockedWord(title) || NotificationBlocklist.containsBlockedWord(body) {
+            return []
+        }
         analytics.displayedNotification()
         return [.list, .banner, .badge, .sound]
     }

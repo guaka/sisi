@@ -13401,6 +13401,39 @@
         }
       }
     },
+    "notificationBlocklist" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification Blocklist"
+          }
+        }
+      }
+    },
+    "notificationBlocklistDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide notifications that contain these words, even when they come from different accounts. “airdrop” is blocked by default."
+          }
+        }
+      }
+    },
+    "notificationBlocklistPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Word to hide"
+          }
+        }
+      }
+    },
     "notifications" : {
       "extractionState" : "manual",
       "localizations" : {
